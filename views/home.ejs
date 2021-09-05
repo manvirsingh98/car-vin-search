@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>All Manufractors</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Shair Test Part 1</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">All manufractors</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/vin">Search by vin</a>
+                  </li>
+              </div>
+            </div>
+          </nav>
+        <section class="py-5 bg-light text-center text-dark"><h3>SHAir Assignment Part 1</h3></section>
+        <section>
+            <div class="container">
+                <form>
+                    <select class="form-select w-25 my-4" aria-label="Default select example">
+                        <option selected disabled>Please select a manufractor</option>
+                        <% for(var i=0; i < result.length; i++) { %>
+                                <option value=<%= result[i].Mfr_CommonName%>>
+                                    <%= result[i].Mfr_Name%>
+                                </option>
+                        <% } %>
+                    </select>
+                </form>
+                <div class="row" id="data"></div>
+            </div>
+        </section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('select').on('change', function() {
+                    // alert( this.value );
+
+                            // get input value
+                const value = this.value
+
+            // submit a request ajax request
+            $.ajax({ 
+            url: '/carMake',
+            type: 'POST',
+            cache: false,
+            data: { value }, 
+            success: function(data){
+                // console.log(data.Results)
+                 $("#data").html(`${data.Results.map((d,i) => `
+                    <div class="card p-3 me-2 mb-2 bg-light text-dark" style="width: 18rem;">
+                            <h6 class="card-title">${d.Make_Name} ${d.Model_Name}</h6>
+                        </div>
+                    `).join('')}`)
+            }
+            , error: function(jqXHR, textStatus, err){
+                alert('text status '+textStatus+', err '+err)
+            }
+            })
+            
+                });
+            });
+        </script>
+    </body>
+</html>

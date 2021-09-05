@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Search by vin</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Shair Test Part 1</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">All manufractors</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="/vin">Search by vin</a>
+                  </li>
+              </div>
+            </div>
+          </nav>
+        <section class="py-5 bg-light text-center text-dark"><h3>SHAir Assignment Part 1</h3></section>
+    <section>
+        <div class="container">
+            <form>
+                <div class="input-group mt-3 w-25 mb-3">
+                    <input type="text" class="form-control" placeholder="Enter a vin" id="vin">
+                    <button class="btn btn-secondary" type="submit" id="btn">Search</button>
+                </div>
+                <div class="text-danger" id="input-error"></div>
+            </form>
+            <div class="row" id="data">
+            </div>
+        </div>
+    </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        // submit form
+      $("form").submit(function(e){
+          e.preventDefault();
+
+        $("#input-error").html("");
+        // get input value
+        const vinValue = $("#vin").val();
+
+        if(!vinValue) {
+            $("#input-error").html("Please enter vin number");
+        } else {
+        // submit a request ajax request
+        $.ajax({ 
+           url: '/submit',
+           type: 'POST',
+           cache: false,
+           data: { vinValue }, 
+           success: function(data){
+              console.log(data.Results[0])
+            $("#data").html(`
+                <div class="col-md-4"> 
+                    <div class="card p-3 bg-light text-dark">
+                        <div><span class="fw-bold">Make:-</span> ${data.Results[0].Make}</div>
+                        <div><span class="fw-bold">Year:-</span> ${data.Results[0].ModelYear}</div>
+                        <div"><span class="fw-bold">Model:-</span> ${data.Results[0].Model}</div>
+                    </div>
+                </div>
+                `)
+           }
+           , error: function(jqXHR, textStatus, err){
+               alert('text status '+textStatus+', err '+err)
+           }
+        })
+    }
+     });         
+    });
+    </script>
+    </body>
+</html>
